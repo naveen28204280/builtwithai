@@ -3,18 +3,14 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
 load_dotenv()
 
-# Create Flask app
 app = Flask(__name__)
 
-# Configuration
 from config import config
 config_name = os.environ.get('FLASK_ENV', 'development')
 app.config.from_object(config[config_name])
 
-# CORS
 CORS(app, resources={
     r"/api/*": {
         "origins": app.config['CORS_ORIGINS'],
@@ -23,28 +19,30 @@ CORS(app, resources={
     }
 })
 
-# Initialize database
 from app.models.database import Database
 app.db = Database(app.config['DATABASE_PATH'])
 print(f"✓ Database initialized: {app.config['DATABASE_PATH']}")
 
-# Register blueprints
+# Register all blueprints
+from app.routes.auth import auth_bp
 from app.routes.transactions import transactions_bp
 from app.routes.chat import chat_bp
 
+app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(transactions_bp, url_prefix='/api/transactions')
 app.register_blueprint(chat_bp, url_prefix='/api/chat')
 
-# Health check
 @app.route('/health')
 def health():
-    return {'status': 'healthy'}
+    return {'status': 'healthy', 'environment': config_name}
 
 @app.route('/')
 def index():
     return {
         'message': 'Student Finance AI API',
+        'version': '1.0.0',
         'endpoints': {
+            'auth': '/api/auth',
             'transactions': '/api/transactions',
             'chat': '/api/chat',
             'health': '/health'
@@ -56,7 +54,7 @@ if __name__ == '__main__':
     host = os.environ.get('HOST', '0.0.0.0')
     
     print(f"\n{'='*50}")
-    print(f"Starting Flask Server")
+    print(f"Student Finance AI - Backend Server")
     print(f"{'='*50}")
     print(f"Environment: {config_name}")
     print(f"URL: http://{host}:{port}")
