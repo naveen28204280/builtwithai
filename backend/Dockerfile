@@ -10,4 +10,5 @@ EXPOSE 5000 3000
 
 COPY . .
 
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "4123"]
 ENTRYPOINT ["python", "run.py"]

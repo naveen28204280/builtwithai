@@ -10,7 +10,7 @@ chat_bp = Blueprint('chat', __name__)
 db = Database()
 forecaster = ExpenseForecaster(db)
 anomaly_detector = AnomalyDetector(db)
-chatterbox = ChatterboxClient(api_key='YOUR_CHATTERBOX_KEY')
+chatterbox = ChatterboxClient()
 
 @chat_bp.route('/chat', methods=['POST'])
 def chat():
