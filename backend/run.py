@@ -30,7 +30,7 @@ from app.routes.chat import chat_bp
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(transactions_bp, url_prefix='/api/transactions')
-app.register_blueprint(chat_bp, url_prefix='/api/chat')
+app.register_blueprint(chat_bp, url_prefix='/api')
 
 @app.route('/health')
 def health():
